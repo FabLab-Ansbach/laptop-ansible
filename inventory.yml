@@ -1,0 +1,35 @@
+laptops:
+  hosts:
+    laptop1:
+      ansible_host: 172.16.17.1
+    laptop2:
+      ansible_host: 172.16.17.2
+    laptop3:
+      ansible_host: 172.16.17.3
+    laptop4:
+      ansible_host: 172.16.17.4
+    laptop5:
+      ansible_host: 172.16.17.5
+    laptop6:
+      ansible_host: 172.16.17.6
+    laptop7:
+      ansible_host: 172.16.17.7
+    laptop8:
+      ansible_host: 172.16.17.8
+    laptop9:
+      ansible_host: 172.16.17.9
+    laptop10:
+      ansible_host: 172.16.17.10
+    laptop11:
+      ansible_host: 172.16.17.11
+    laptop12:
+      ansible_host: 172.16.17.12
+    laptop13:
+      ansible_host: 172.16.17.13
+    laptop14:
+      ansible_host: 172.16.17.14
+  vars:
+    ansible_port: 22
+    ansible_user: laptop
+    ansible_become: true
+

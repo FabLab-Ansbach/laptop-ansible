@@ -1,0 +1,9 @@
+- name: "DPKG Update"
+  hosts: laptops
+  tasks:
+    - name: "Update package cache"
+      ansible.builtin.apt:
+        update_cache: true
+    - name: "Run package Update"
+      ansible.builtin.apt:
+        upgrade: safe
