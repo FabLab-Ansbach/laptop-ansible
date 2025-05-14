@@ -8,8 +8,6 @@
         owner: root
         group: root
         mode: 0755
-    - name: "Add user to dialout"
-      user:
-        name: user
-        groups: dialout
-        append: yes
+  roles:
+   - serial-base
+   - platform-io
