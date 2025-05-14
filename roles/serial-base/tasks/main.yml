@@ -1,0 +1,13 @@
+#SPDX-License-Identifier: MIT-0
+---
+# tasks file for serial-base
+- name: "Add user to dialout"
+  user:
+    name: user
+    groups: dialout
+    append: yes
+- name: "Remove brltty package"
+  ansible.builtin.apt:
+    name: brltty
+    state: absent
+    autoremove: yes
