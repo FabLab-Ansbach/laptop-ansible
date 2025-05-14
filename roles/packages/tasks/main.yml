@@ -1,0 +1,33 @@
+---
+# tasks file for gb-packages
+- name: Download keys for additional repositories
+  ansible.builtin.get_url:
+    url: '{{ item.key_url }}'
+    dest: '/etc/apt/trusted.gpg.d/{{ item.name }}.{{ item.key_type }}'
+    mode: '0755'
+  loop: '{{ apt_repos }}'
+
+- name: Install additional repositories
+  ansible.builtin.apt_repository:
+    repo: '{{ item.repo }}'
+    state: present
+  loop: '{{ apt_repos }}'
+
+# - name: Install additional repositories
+#   ansible.builtin.apt_repository:
+#     repo: 'ppa:kicad/kicad-8.0-releases'
+#     state: present
+
+- name: Reload apt package cache
+  ansible.builtin.apt:
+    update_cache: true
+
+- name: "Run package Update"
+  ansible.builtin.apt:
+    upgrade: safe
+
+# - name: Install required apt packages
+#   ansible.builtin.apt:
+#     name: '{{ item }}'
+#     state: present
+#   loop: '{{ apt_pkgs }}'
