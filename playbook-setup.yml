@@ -9,5 +9,6 @@
         group: root
         mode: 0755
   roles:
+   - packages
    - serial-base
    - platform-io
