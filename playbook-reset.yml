@@ -1,0 +1,15 @@
+- name: "Reset User directory"
+  hosts: laptops
+  tasks:
+    - name: "Remove user home"
+      ansible.builtin.file:
+        path: "/home/user"
+        state: absent
+    - name: "Copy from /etc/skel"
+      ansible.builtin.copy:
+        src: /etc/skel
+        dest: /home/user
+        remote_src: yes
+        owner: user
+        group: user
+        mode: 0755

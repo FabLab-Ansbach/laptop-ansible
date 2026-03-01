@@ -1,0 +1,8 @@
+---
+- src: https://github.com/FabLab-Ansbach/ansible-role-sshd_conf.git
+  scm: git
+  version: main
+
+- src: https://github.com/FabLab-Ansbach/ansible-role-apt_package_setup.git
+  scm: git
+  version: main

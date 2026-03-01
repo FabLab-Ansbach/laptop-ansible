@@ -1,39 +1,52 @@
 laptops:
   hosts:
     laptop1:
-      ansible_host: 172.16.17.1
+      ansible_host: laptop1.fablab.lan
     laptop2:
-      ansible_host: 172.16.17.2
+      ansible_host: laptop2.fablab.lan
     laptop3:
-      ansible_host: 172.16.17.3
+      ansible_host: laptop3.fablab.lan
     laptop4:
-      ansible_host: 172.16.17.4
+      ansible_host: laptop4.fablab.lan
     laptop5:
-      ansible_host: 172.16.17.5
+      ansible_host: laptop5.fablab.lan
     laptop6:
-      ansible_host: 172.16.17.6
+      ansible_host: laptop6.fablab.lan
     laptop7:
-      ansible_host: 172.16.17.7
+      ansible_host: laptop7.fablab.lan
     laptop8:
-      ansible_host: 172.16.17.8
+      ansible_host: laptop8.fablab.lan
     laptop9:
-      ansible_host: 172.16.17.9
+      ansible_host: laptop9.fablab.lan
     laptop10:
-      ansible_host: 172.16.17.10
+      ansible_host: laptop10.fablab.lan
     laptop11:
-      ansible_host: 172.16.17.11
+      ansible_host: laptop11.fablab.lan
     laptop12:
-      ansible_host: 172.16.17.12
+      ansible_host: laptop12.fablab.lan
     laptop13:
-      ansible_host: 172.16.17.13
+      ansible_host: laptop13.fablab.lan
     laptop14:
-      ansible_host: 172.16.17.14
+      ansible_host: laptop14.fablab.lan
+    laptop15:
+      ansible_host: laptop15.fablab.lan
+    laptop16:
+      ansible_host: laptop16.fablab.lan
+    laptop17:
+      ansible_host: laptop17.fablab.lan
+    laptop18:
+      ansible_host: laptop18.fablab.lan
   vars:
     ansible_port: 22
     ansible_user: laptop
     ansible_become: true
-    apt_repos:
-      - name: "vscode"
-        key_url: "https://packages.microsoft.com/keys/microsoft.asc"
-        key_type: asc
-        repo: "deb https://packages.microsoft.com/repos/code stable main"
+    apt:
+      repos:
+        - name: "vscode"
+          key_url: "https://packages.microsoft.com/keys/microsoft.asc"
+          key_type: asc
+          repo: "deb https://packages.microsoft.com/repos/code stable main"
+      packages:
+        - code
+        - vim
+        - inkscape

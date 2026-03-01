@@ -6,4 +6,10 @@
         update_cache: true
     - name: "Run package Update"
       ansible.builtin.apt:
-        upgrade: safe
+        upgrade: full
+    - name: "reboot if needed"
+      ansible.builtin.reboot:
+        reboot_timeout: 300
+    - name: "remove obsolete packages"
+      ansible.builtin.apt:
+        autoremove: true

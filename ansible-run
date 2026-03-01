@@ -1,0 +1,36 @@
+#!/bin/bash -e
+BASEDIR=$(dirname $0)
+INVENTORY="${BASEDIR}/inventory.yml"
+COMMAND=$1
+VAULTPWFILE=.vaultpasswd
+
+function usage() {
+cat << EOF
+Usage: $0 [command]
+Available commands:
+    setup   - Execute complete setup on all hosts
+    update  - Perform a package update on all hosts
+    reset   - Reset user directories
+EOF
+
+}
+
+function run_playbook() {
+  ansible-playbook -i $INVENTORY --vault-password-file $VAULTPWFILE $1
+}
+
+case $COMMAND in
+    setup)
+    run_playbook playbook-setup.yml
+    ;;
+    update)
+    run_playbook playbook-update.yml
+    ;;
+    reset)
+    run_playbook playbook-reset.yml && run_playbook playbook-setup.yml
+    ;;
+    *)
+    usage
+    exit 1
+    ;;
+esac
