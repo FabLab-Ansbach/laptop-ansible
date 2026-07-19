@@ -49,5 +49,4 @@ laptops:
       packages:
         - code
         - vim
-        - inkscape
         - openscad
