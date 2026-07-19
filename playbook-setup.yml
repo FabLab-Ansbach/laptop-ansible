@@ -1,3 +1,53 @@
+- name: "Setups networks"
+  hosts: laptops
+  tasks:
+    - name: "Detect WiFi interface"
+      ansible.builtin.shell: |
+        nmcli device status | grep wifi | awk '{print $1}' | head -n 1
+      register: wifi_interface
+      changed_when: false
+      failed_when: wifi_interface.stdout == ""
+
+    - name: "Add FabLab Kurs"
+      community.general.nmcli:
+        conn_name: "FabLab Kurs"
+        ifname: "{{ wifi_interface.stdout }}"
+        state: present
+        type: wifi
+        ssid: "FabLab Kurs"
+        wifi:
+          mode: infrastructure
+        wifi_sec:
+          key-mgmt: wpa-psk
+          psk: "FabLabKurs42*"
+        method4: auto
+        method6: auto
+        conn_reload: true
+
+    - name: "Add FabLab Ansbach"
+      community.general.nmcli:
+        conn_name: "FabLab Ansbach"
+        ifname: "{{ wifi_interface.stdout }}"
+        state: present
+        type: wifi
+        ssid: "FabLab Ansbach"
+        wifi:
+          mode: infrastructure
+        wifi_sec:
+          key-mgmt: wpa-psk
+          psk: "FabLab2025!"
+        method4: auto
+        method6: auto
+        conn_reload: true
+
+    - name: "Remove all other WiFi connections"
+      ansible.builtin.shell: |
+        nmcli connection show | grep -v "FabLab Kurs\|FabLab Ansbach" | grep -v "^--\|^NAME" | awk '{print $1}' | while read conn; do
+          if [ ! -z "$conn" ]; then
+            nmcli connection delete "$conn" || true
+          fi
+        done
+      changed_when: true
 - name: "APT Proxy setup"
   hosts: laptops
   tasks:
@@ -65,11 +115,65 @@
 - name: "Install and setup"
   hosts: laptops
   tasks:
-    # - name: "Install FreeCAD via Flatpak"
-    #   community.general.flatpak:
-    #     name: org.freecadweb.FreeCAD
-    #     state: present
-
+    - name: "Install FreeCAD via Flatpak"
+      community.general.flatpak:
+        name: org.freecadweb.FreeCAD
+        state: present
+- name: "Install OrcaSlicer via Flatpak"
+  hosts: laptops
+  tasks:
+    - name: "Install OrcaSlicer"
+      community.general.flatpak:
+        name: com.orcaslicer.OrcaSlicer
+        state: present
+    - name: Upload OrcaSlicer configuration
+      vars:
+        ansible_become: false
+      ansible.posix.synchronize:
+        src: "{{ playbook_dir }}/files/orcaslicer-config/"
+        dest: "/tmp/orcaslicer-config-stage/"
+        archive: true
+        delete: true
+      become: false
+    - name: Create config directory
+      ansible.builtin.file:
+        path: "/home/{{ item }}/.var/app/com.orcaslicer.OrcaSlicer/config/OrcaSlicer"
+        state: directory
+        owner: "{{ item }}"
+        group: "{{ item }}"
+        mode: "0755"
+      loop:
+        - laptop
+        - user
+    - name: Install OrcaSlicer configuration
+      ansible.builtin.copy:
+        src: "/tmp/orcaslicer-config-stage/"
+        dest: "/home/{{ item }}/.var/app/com.orcaslicer.OrcaSlicer/config/OrcaSlicer/"
+        remote_src: true
+        owner: "{{ item }}"
+        group: "{{ item }}"
+        mode: preserve
+      loop:
+        - laptop
+        - user
+    - name: Remove OrcaSlicer staging directory
+      ansible.builtin.file:
+        path: "/tmp/orcaslicer-config-stage/"
+        state: absent
+      changed_when: false
+- name: "Install inkscape flatpak"
+  hosts: laptops
+  tasks:
+    - name: "Remove Inkscape package installed via apt"
+      ansible.builtin.apt:
+        name: inkscape
+        state: absent
+    - name: "Install Inkscape via Flatpak"
+      community.general.flatpak:
+        name: org.inkscape.Inkscape
+        state: present
+- name: "Setup roles"
+  hosts: laptops
   roles:
    - fablab_ansbach.apt_package_setup
    - serial-base
